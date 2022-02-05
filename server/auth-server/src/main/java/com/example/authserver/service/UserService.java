@@ -23,7 +23,7 @@ public class UserService {
     }
 
     public User checkLogin(String username,String password){
-        log.info("---In AuthServer-UserService-checkLogin");
+        log.info("---In AuthServer-UserService-checkLogin credentials");
         User user = userRepository.findByUsername(username);
         if(user == null)
             return null;
