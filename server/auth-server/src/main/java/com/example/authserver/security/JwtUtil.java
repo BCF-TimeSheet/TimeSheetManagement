@@ -1,6 +1,7 @@
 package com.example.authserver.security;
 
 import com.example.authserver.constant.JwtConstant;
+import com.example.authserver.domain.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,13 @@ public class JwtUtil {
             LOGGER.warn("Exception Parsing Jwt");
             return null;
         }
+    }
+    public static Boolean validateToken(String token, User user) {
+        final String username = getSubjectFromJwt(token);
+        Jws<Claims> claims = Jwts.parser().setSigningKey(JwtConstant.JWT_SIGNING_KEY).parseClaimsJws(token);
+        // JWT token is not expired
+        boolean isTokenExpired = claims.getBody().getExpiration().before(new Date());
+        return (username.equals(user.getUsername()) && !isTokenExpired);
     }
 
 

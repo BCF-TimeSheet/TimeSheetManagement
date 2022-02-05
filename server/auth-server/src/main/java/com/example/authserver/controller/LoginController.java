@@ -1,18 +1,22 @@
 package com.example.authserver.controller;
 
 import com.example.authserver.constant.JwtConstant;
+import com.example.authserver.domain.AuthenticationRequest;
+import com.example.authserver.domain.AuthenticationResponse;
 import com.example.authserver.domain.User;
 import com.example.authserver.security.CookieUtil;
 import com.example.authserver.security.JwtUtil;
 import com.example.authserver.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,7 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class LoginController {
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @GetMapping("/")
     public String loginMy() {
@@ -32,6 +39,23 @@ public class LoginController {
     public String login() {
         log.info("---In auth-server /login");
         return "login";
+    }
+
+    @PostMapping("/auth")
+    @ResponseBody
+    public ResponseEntity<?> createAuth(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+        try{
+            log.info("---In LoginController-auth");
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authenticationRequest.getUsername(),
+                authenticationRequest.getPassword()
+        ));
+        }catch (BadCredentialsException e){
+            throw new Exception("Incorrect!", e);
+        }
+        UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
+        String jwt = JwtUtil.generateToken(authenticationRequest.getUsername(), JwtConstant.JWT_VALID_DURATION, userService.getUserIdByUsername(authenticationRequest.getUsername()));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
     @PostMapping("/login")
