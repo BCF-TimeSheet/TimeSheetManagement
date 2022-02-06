@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:9999/auth/'
+const API_URL = 'http://localhost:9999/auth'
 
 const login = (username, password) => {
   return axios
@@ -9,7 +9,8 @@ const login = (username, password) => {
       password,
     })
     .then((response) => {
-      if (response.data.accessToken) {
+      console.log('Res:' + response.data)
+      if (response.data.jwt) {
         localStorage.setItem('user', JSON.stringify(response.data))
       }
 

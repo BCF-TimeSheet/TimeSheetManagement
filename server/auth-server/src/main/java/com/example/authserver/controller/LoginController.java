@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600,allowCredentials = "true")
 public class LoginController {
     @Autowired
     private UserService userService;
@@ -51,7 +52,8 @@ public class LoginController {
                 authenticationRequest.getPassword()
         ));
         }catch (BadCredentialsException e){
-            throw new Exception("Incorrect!", e);
+
+            return ResponseEntity.badRequest().body(new AuthenticationResponse("Wrong username or password!"));
         }
         UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
         String jwt = JwtUtil.generateToken(authenticationRequest.getUsername(), JwtConstant.JWT_VALID_DURATION, userService.getUserIdByUsername(authenticationRequest.getUsername()));

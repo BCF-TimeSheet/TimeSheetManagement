@@ -45,16 +45,12 @@ const Login = (props) => {
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.login(username, password).then(
         () => {
-          props.history.push('/profile')
+          props.history.push('/')
           window.location.reload()
         },
         (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString()
+          console.log(error.response.data.jwt)
+          const resMessage = error.response.data.jwt.toString()
 
           setLoading(false)
           setMessage(resMessage)
@@ -68,12 +64,6 @@ const Login = (props) => {
   return (
     <div className="col-md-12">
       <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
-
         <Form onSubmit={handleLogin} ref={form}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
