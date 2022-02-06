@@ -10,9 +10,9 @@
         <module name="composite-server" />
         <module name="eureka-server" />
         <module name="cloud-gateway" />
+        <module name="employee-server" />
         <module name="auth-server" />
         <module name="timesheet-server" />
-        <module name="employee-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
