@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import AuthService from '../services/auth.service'
 import { Switch, Route, Link } from 'react-router-dom'
 import Login from './Login'
+import TimeSheet from './TimeSheet'
+import Profile from './Profile'
+import Summary from './Summary'
 
 const Home = () => {
   const [currentUser, setCurrentUser] = useState(undefined)
@@ -69,14 +72,14 @@ const Home = () => {
           </div>
         )}
       </nav>
-      {currentUser ? <h2>Welcome</h2> : <h2>Please log in</h2>}
+      {currentUser ? '' : <h2>Please log in</h2>}
       <div className="container mt-3">
         <Switch>
           {/* <Route exact path={['/', '/home']} component={Home} /> */}
           <Route exact path="/login" component={Login} />
-          <Route exact path="/summary" component={Login} />
-          <Route exact path="/timesheet" component={Login} />
-          <Route exact path="/profile" component={Login} />
+          <Route exact path="/summary" component={Summary} />
+          <Route exact path="/timesheet" component={TimeSheet} />
+          <Route exact path="/profile" component={Profile} />
         </Switch>
       </div>
     </div>

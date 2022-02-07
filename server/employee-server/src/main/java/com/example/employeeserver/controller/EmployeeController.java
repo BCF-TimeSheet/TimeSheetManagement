@@ -13,4 +13,9 @@ public class EmployeeController {
     public String testMapping(){
         return "Hello";
     }
+
+    @GetMapping("/auth")
+    public String hasAuth(){
+        return "You got here";
+    }
 }
