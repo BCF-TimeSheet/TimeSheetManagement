@@ -3,12 +3,15 @@ package com.example.timesheetserver.security;
 import com.example.timesheetserver.constant.JwtConstant;
 import com.example.timesheetserver.exception.InvalidJwtAuthenticationException;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+@Slf4j
 public class JwtUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
@@ -63,6 +66,19 @@ public class JwtUtil {
             LOGGER.warn("Exception Parsing Jwt");
             return null;
         }
+    }
+
+    public static String resolveToken(HttpServletRequest req) {
+        log.info("---In JwtUltil, resolveToken, reqHeader=" + req.getHeader("Authorization"));
+        // get the token from Authorization header
+        String bearerToken = req.getHeader("Authorization");
+
+        // validate token is not null and token is a jwt
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            // get the jwt directly
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public static Claims getClaimsFromJwt(String token){
