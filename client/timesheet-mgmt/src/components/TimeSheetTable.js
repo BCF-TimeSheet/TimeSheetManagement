@@ -1,14 +1,29 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { useTable } from 'react-table'
 import { COLUMNS } from './TimesheetColumns'
+import Select from 'react-select'
 
 function TimeSheetTable(props) {
-  // const [week, setWeek] = useState()
-  // useEffect(() => {
-  //   setWeek(weekData)
-  // }, [weekData])
-  // if (week) console.log(week)
-  console.log('Props', props)
+  const [week, setWeek] = useState(props.week)
+  useEffect(() => {
+    setWeek(props.week)
+  }, [props.week])
+
+  console.log('week', week)
+
+  const timeOptions = [
+    { label: 'NA', value: null },
+    { label: '9:00AM', value: 9 },
+    { label: '10:00AM', value: 10 },
+    { label: '11:00AM', value: 11 },
+    { label: '12:00PM', value: 12 },
+    { label: '1:00PM', value: 13 },
+    { label: '2:00pM', value: 14 },
+    { label: '3:00PM', value: 15 },
+    { label: '4:00PM', value: 16 },
+    { label: '5:00PM', value: 17 },
+    { label: '6:00PM', value: 18 },
+  ]
 
   console.log(props.week)
   return (
@@ -27,9 +42,24 @@ function TimeSheetTable(props) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{props.week && props.week[0].day}</td>
-          </tr>
+          {week.map((element, i) => {
+            return (
+              <tr key={i}>
+                <td>{props.week[i].day}</td>
+                <td>{props.week[i].date}</td>
+                <td>
+                  <Select options={timeOptions} />
+                </td>
+                <td>
+                  <Select options={timeOptions} />
+                </td>
+                <td>{props.week[i].day}</td>
+                <td>{props.week[i].day}</td>
+                <td>{props.week[i].day}</td>
+                <td>{props.week[i].day}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

@@ -7,7 +7,6 @@ import TimeSheetTable from './TimeSheetTable'
 function TimeSheet(props) {
   const [timesheet, setTimeSheet] = useState([])
   const [week, setWeek] = useState([])
-  // console.log('week:', week[0].day)
 
   const getTimeSheet = async () => {
     const response = await TimesheetService.getAllTimeSheet().catch((err) =>
@@ -15,6 +14,7 @@ function TimeSheet(props) {
     )
     if (response) {
       const timesheetRes = response.data
+      console.log(response.data)
       console.log(timesheetRes[0].days)
       setWeek(timesheetRes[0].days)
       setTimeSheet(response.data)
@@ -29,15 +29,15 @@ function TimeSheet(props) {
 
 export default TimeSheet
 // useEffect(() => {
-//   TimesheetService.getAllTimeSheet().then(
-//     (response) => {
-//       console.log(response.data)
+// TimesheetService.getAllTimeSheet().then(
+//   (response) => {
+//     console.log(response.data)
 
-//       setTimeSheet(response.data)
-//       console.log(timesheet)
-//     },
-//     (err) => {
-//       console.log('Err: ' + err)
-//     }
-//   )
+//     setTimeSheet(response.data)
+//     console.log(timesheet)
+//   },
+//   (err) => {
+//     console.log('Err: ' + err)
+//   }
+// )
 // }, [])
