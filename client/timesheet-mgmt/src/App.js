@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Home from './components/Home'
 import AuthService from './services/auth.service'
 import Login from './components/Login'
+import Profile from './components/Profile'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Switch>
           <Route exact path={['/', '/home']} component={Home} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/profile" component = {Profile} />
           {/* <Route exact path="/profile" component={Profile} /> */}
           {/* <Route path="/user" component={BoardUser} /> */}
         </Switch>

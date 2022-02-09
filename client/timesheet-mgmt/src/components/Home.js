@@ -3,6 +3,7 @@ import AuthService from '../services/auth.service'
 import UserService from '../services/user.service'
 import { Switch, Route, Link } from 'react-router-dom'
 import Login from './Login'
+import Profile from './Profile'
 
 const Home = () => {
   const [currentUser, setCurrentUser] = useState(undefined)
@@ -58,6 +59,7 @@ const Home = () => {
         )}
       </nav>
       {currentUser ? <h2>Welcome</h2> : <h2>Please log in</h2>}
+    
     </div>
   )
   //   const [content, setContent] = useState('')
