@@ -61,8 +61,25 @@ function TimeSheetTable(props) {
   console.log(props.week)
   return (
     <div>
-      <table>
-        <thead>
+      <div className="row">
+        <div className="col-sm">
+          <button className="btn btn-info col-sm">Set Default</button>
+        </div>
+        <div className="col-sm">
+          <p>Week Ending</p>
+          <input type="text" value={week[6].date} readOnly />
+        </div>
+        <div className="col-sm">
+          <p>Total Billing Hours</p>
+          <input type="text" value={0} readOnly />
+        </div>
+        <div className="col-sm">
+          <p>Total Compensation Hours</p>
+          <input type="text" value={0} readOnly />
+        </div>
+      </div>
+      <table className="table table-striped">
+        <thead className="thead-light">
           <tr>
             <th>Day</th>
             <th>Date</th>
@@ -121,7 +138,7 @@ function TimeSheetTable(props) {
                     />
                   )}
                 </td>
-                <td>
+                <td className="text-center">
                   {props.week[i].day === 'Sunday' ||
                   props.week[i].day === 'Saturday'
                     ? 'NA'
@@ -129,14 +146,64 @@ function TimeSheetTable(props) {
                     ? endTime[i] - startTime[i]
                     : 0}
                 </td>
-                <td>{props.week[i].day}</td>
-                <td>{props.week[i].day}</td>
-                <td>{props.week[i].day}</td>
+                <td className="text-center">
+                  <input
+                    type="radio"
+                    // value={week[i].floating}
+                    name={'dayOff' + i}
+                    htmlFor="floating"
+                    disabled={
+                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
+                    }
+                  ></input>
+                </td>
+                {console.log(week[i].floating)}
+                <td className="text-center">
+                  <input
+                    type="radio"
+                    htmlFor="holiday"
+                    // value={false}
+                    name={'dayOff' + i}
+                    checked={
+                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
+                    }
+                    disabled={
+                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
+                    }
+                    readOnly
+                  ></input>
+                </td>
+                <td className="text-center">
+                  <input
+                    type="radio"
+                    htmlFor="vacation"
+                    // value={false}
+                    name={'dayOff' + i}
+                    disabled={
+                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
+                    }
+                  ></input>
+                </td>
               </tr>
             )
           })}
         </tbody>
       </table>
+      <div className="row">
+        <div className="row-sm">
+          <button className="btn btn-primary">Save</button>
+        </div>
+        <div>
+          <p> </p>
+        </div>
+
+        <form action="">
+          <div className="row-sm">
+            <input type="file" />
+            <input type="submit" />
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
