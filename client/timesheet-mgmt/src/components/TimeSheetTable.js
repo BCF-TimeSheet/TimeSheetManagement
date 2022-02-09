@@ -1,24 +1,62 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
 import React, { useState, useEffect, useMemo } from 'react'
-import { useTable } from 'react-table'
-import { COLUMNS } from './TimesheetColumns'
 import Select from 'react-select'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 function TimeSheetTable(props) {
   const [week, setWeek] = useState(props.week)
   useEffect(() => {
-    setWeek(props.week)
-  }, [])
-  const initialStartime = []
-  week.forEach((w) => initialStartime.push(parseInt(w.startTime)))
-  console.log(initialStartime)
+    const currProps = props.week
+    setWeek(currProps)
+  }, [props.week])
 
+  console.log('props timesheet: ', props.timesheet)
+
+  const initialStartime = []
   const initialEndTime = []
-  week.forEach((w) => initialEndTime.push(parseInt(w.endTime)))
-  console.log(initialEndTime)
+  const initialTotalHours = []
+  const initialFloating = []
+  const initialVacation = []
+  week.forEach((w) => {
+    initialStartime.push(parseInt(w.startTime))
+    initialEndTime.push(parseInt(w.endTime))
+    initialTotalHours.push(parseInt(w.endTime) - parseInt(w.startTime))
+    initialFloating.push(w.floating)
+    initialVacation.push(w.vacation)
+  })
+
+  useEffect(() => {
+    const curTotalHours = []
+    week.forEach((w) => {
+      const startTime = parseInt(w.startTime)
+      const endTime = parseInt(w.endTime)
+      if (startTime < endTime) {
+        curTotalHours.push(parseInt(w.endTime) - parseInt(w.startTime))
+      } else curTotalHours.push(0)
+    })
+    setTotalHour([...curTotalHours])
+    setTotalBillingHour(
+      curTotalHours.reduce((s, i) => s + i),
+      0
+    )
+  }, [week])
 
   const [startTime, setStartTime] = useState([...initialStartime])
   const [endTime, setEndTime] = useState([...initialEndTime])
+  const [totalHour, setTotalHour] = useState([...initialTotalHours])
+  const [totalBillingHour, setTotalBillingHour] = useState(
+    props.timesheet.totalBillingHour
+  )
+  const [totalCompensationHours, setTotalCompensationHours] = useState(
+    props.timesheet.totalCompensationHours
+  )
+  const [selectedDate, setSelectedDate] = useState(
+    Date.parse(props.week[6].date.replace(/-/g, '/'))
+  )
+  const [vacation, setVacation] = useState(initialFloating)
+  const [floating, setFloating] = useState(initialVacation)
 
   const handleOnStartTime = (e, i) => {
     console.log(e.value, 'index', i)
@@ -42,10 +80,64 @@ function TimeSheetTable(props) {
     setWeek([...currWeek])
   }
 
-  console.log('week', week)
+  const handleFloat = (e, i) => {
+    const float = [...floating]
+    const vaca = [...vacation]
+    const currWeek = [...week]
+    if (e.target.checked == true && vaca[i] == true) {
+      float.splice(i, 1, true)
+      vaca.splice(i, 1, false)
+      setFloating([...float])
+      setVacation([...vaca])
+
+      currWeek.splice(i, 1, { ...week[i], floating: true, vacation: false })
+      setWeek([...currWeek])
+    } else if (e.target.checked == true && vaca[i] == false) {
+      float.splice(i, 1, true)
+      setFloating([...float])
+
+      currWeek.splice(i, 1, { ...week[i], floating: true })
+      setWeek([...currWeek])
+    } else {
+      float.splice(i, 1, false)
+      setFloating([...float])
+      currWeek.splice(i, 1, { ...week[i], floating: false })
+      setWeek([...currWeek])
+    }
+  }
+
+  const handleVaca = (e, i) => {
+    const float = [...floating]
+    const vaca = [...vacation]
+    const currWeek = [...week]
+
+    if (e.target.checked == true && float[i] == true) {
+      float.splice(i, 1, false)
+      vaca.splice(i, 1, true)
+      setFloating([...float])
+      setVacation([...vaca])
+
+      currWeek.splice(i, 1, { ...week[i], floating: false, vacation: true })
+      setWeek([...currWeek])
+    } else if (e.target.checked == true && float[i] == false) {
+      vaca.splice(i, 1, true)
+      setVacation([...vaca])
+      currWeek.splice(i, 1, { ...week[i], vacation: true })
+      setWeek([...currWeek])
+    } else {
+      vaca.splice(i, 1, false)
+      setVacation([...vaca])
+      currWeek.splice(i, 1, { ...week[i], vacation: false })
+      setWeek([...currWeek])
+    }
+  }
+
+  const isWeekend = (week) => {
+    return week.day == 'Sunday' || week.day == 'Saturday'
+  }
 
   const timeOptions = [
-    { label: 'NA', value: null },
+    { label: 'NA', value: 'NA' },
     { label: '9:00AM', value: 9 },
     { label: '10:00AM', value: 10 },
     { label: '11:00AM', value: 11 },
@@ -58,7 +150,7 @@ function TimeSheetTable(props) {
     { label: '6:00PM', value: 18 },
   ]
 
-  console.log(props.week)
+  console.log('props.week:', props.week)
   return (
     <div>
       <div className="row">
@@ -67,15 +159,17 @@ function TimeSheetTable(props) {
         </div>
         <div className="col-sm">
           <p>Week Ending</p>
-          <input type="text" value={week[6].date} readOnly />
+          <DatePicker
+            dateFormat="yyyy-MM-dd"
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+          />
         </div>
         <div className="col-sm">
-          <p>Total Billing Hours</p>
-          <input type="text" value={0} readOnly />
+          <p>Total Billing Hours: {totalBillingHour}</p>
         </div>
         <div className="col-sm">
-          <p>Total Compensation Hours</p>
-          <input type="text" value={0} readOnly />
+          <p>Total Compensation Hours: {totalCompensationHours} </p>
         </div>
       </div>
       <table className="table table-striped">
@@ -95,16 +189,10 @@ function TimeSheetTable(props) {
           {week.map((element, i) => {
             return (
               <tr key={i}>
-                {/* <>
-                  {console.log(
-                    timeOptions.filter((t) => t.value == week[i].startTime)
-                  )}
-                </> */}
                 <td>{props.week[i].day}</td>
                 <td>{props.week[i].date}</td>
                 <td>
-                  {props.week[i].day === 'Sunday' ||
-                  props.week[i].day === 'Saturday' ? (
+                  {isWeekend(week[i]) ? (
                     <Select
                       options={timeOptions}
                       defaultValue={timeOptions[0]}
@@ -121,8 +209,7 @@ function TimeSheetTable(props) {
                   )}
                 </td>
                 <td>
-                  {props.week[i].day === 'Sunday' ||
-                  props.week[i].day === 'Saturday' ? (
+                  {isWeekend(!!week[i]) ? (
                     <Select
                       options={timeOptions}
                       defaultValue={timeOptions[0]}
@@ -139,49 +226,47 @@ function TimeSheetTable(props) {
                   )}
                 </td>
                 <td className="text-center">
-                  {props.week[i].day === 'Sunday' ||
-                  props.week[i].day === 'Saturday'
-                    ? 'NA'
-                    : endTime[i] > startTime[i]
-                    ? endTime[i] - startTime[i]
-                    : 0}
-                </td>
-                <td className="text-center">
                   <input
-                    type="radio"
-                    // value={week[i].floating}
-                    name={'dayOff' + i}
-                    htmlFor="floating"
-                    disabled={
-                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
-                    }
-                  ></input>
-                </td>
-                {console.log(week[i].floating)}
-                <td className="text-center">
-                  <input
-                    type="radio"
-                    htmlFor="holiday"
-                    // value={false}
-                    name={'dayOff' + i}
-                    checked={
-                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
-                    }
-                    disabled={
-                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
-                    }
+                    type="text"
+                    value={isWeekend(!!week[i]) ? 'NA' : totalHour[i]}
+                    size="1"
                     readOnly
                   ></input>
                 </td>
                 <td className="text-center">
+                  {/* {console.log('week floating', week[i].floating)} */}
+
                   <input
-                    type="radio"
-                    htmlFor="vacation"
+                    type="checkbox"
+                    // value={week[i].floating}
+                    name={'dayOff' + i}
+                    htmlFor="floating"
+                    checked={!!week[i].floating}
+                    defaultChecked={week[i].floating}
+                    onChange={(e) => handleFloat(e, i)}
+                    disabled={isWeekend(week[i])}
+                  ></input>
+                </td>
+                <td className="text-center">
+                  <input
+                    type="checkbox"
+                    htmlFor="holiday"
                     // value={false}
                     name={'dayOff' + i}
-                    disabled={
-                      week[i].day == 'Sunday' || week[i].day == 'Saturday'
-                    }
+                    defaultChecked={isWeekend(week[i])}
+                    disabled
+                    readOnly={isWeekend(week[i])}
+                  ></input>
+                </td>
+                <td className="text-center">
+                  <input
+                    type="checkbox"
+                    htmlFor="vacation"
+                    // value={false}
+                    checked={!!week[i].vacation}
+                    name={'dayOff' + i}
+                    disabled={isWeekend(week[i])}
+                    onChange={(e) => handleVaca(e, i)}
                   ></input>
                 </td>
               </tr>

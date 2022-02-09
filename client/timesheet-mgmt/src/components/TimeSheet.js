@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import TimesheetService from '../services/timesheet.service'
-import { useTable } from 'react-table'
-import { COLUMNS } from './TimesheetColumns'
 import TimeSheetTable from './TimeSheetTable'
 
 function TimeSheet(props) {
@@ -24,7 +22,13 @@ function TimeSheet(props) {
     getTimeSheet()
   }, [])
 
-  return <div>{week.length > 0 && <TimeSheetTable week={week} />}</div>
+  return (
+    <div>
+      {week.length > 0 && timesheet.length > 0 && (
+        <TimeSheetTable week={week} timesheet={timesheet[0]} />
+      )}
+    </div>
+  )
 }
 
 export default TimeSheet
