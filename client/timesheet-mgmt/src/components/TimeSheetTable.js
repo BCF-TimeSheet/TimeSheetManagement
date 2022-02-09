@@ -29,6 +29,10 @@ function TimeSheetTable(props) {
         <tbody>
           <tr>
             <td>{props.week && props.week[0].day}</td>
+            <td>{props.week && props.week[0].date}</td>
+            <td>{props.week && props.week[0].startTime}</td>
+            <td>{props.week && props.week[0].endTime}</td>
+            <td>{props.week && props.week[0].holiday}</td>
           </tr>
         </tbody>
       </table>
