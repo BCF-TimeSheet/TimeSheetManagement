@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useState, useEffect, useMemo } from 'react'
 import { useTable } from 'react-table'
 import { COLUMNS } from './TimesheetColumns'
@@ -7,7 +8,39 @@ function TimeSheetTable(props) {
   const [week, setWeek] = useState(props.week)
   useEffect(() => {
     setWeek(props.week)
-  }, [props.week])
+  }, [])
+  const initialStartime = []
+  week.forEach((w) => initialStartime.push(parseInt(w.startTime)))
+  console.log(initialStartime)
+
+  const initialEndTime = []
+  week.forEach((w) => initialEndTime.push(parseInt(w.endTime)))
+  console.log(initialEndTime)
+
+  const [startTime, setStartTime] = useState([...initialStartime])
+  const [endTime, setEndTime] = useState([...initialEndTime])
+
+  const handleOnStartTime = (e, i) => {
+    console.log(e.value, 'index', i)
+    const newStartTime = [...startTime]
+    newStartTime[i] = e.value
+    setStartTime([...newStartTime])
+    const currWeek = [...week]
+    currWeek.splice(i, 1, { ...week[i], startTime: e.value.toString() })
+    // console.log('currWeek', currWeek)
+    setWeek([...currWeek])
+    // setWeek({ ...week, startTime: e.value })
+  }
+  const handleOnEndTime = (e, i) => {
+    console.log(e.value, 'index', i)
+    const newEndTime = [...endTime]
+    newEndTime[i] = e.value
+    setEndTime([...newEndTime])
+    const currWeek = [...week]
+    currWeek.splice(i, 1, { ...week[i], endTime: e.value.toString() })
+    // console.log('currWeek', currWeek)
+    setWeek([...currWeek])
+  }
 
   console.log('week', week)
 
@@ -18,7 +51,7 @@ function TimeSheetTable(props) {
     { label: '11:00AM', value: 11 },
     { label: '12:00PM', value: 12 },
     { label: '1:00PM', value: 13 },
-    { label: '2:00pM', value: 14 },
+    { label: '2:00PM', value: 14 },
     { label: '3:00PM', value: 15 },
     { label: '4:00PM', value: 16 },
     { label: '5:00PM', value: 17 },
@@ -45,15 +78,57 @@ function TimeSheetTable(props) {
           {week.map((element, i) => {
             return (
               <tr key={i}>
+                {/* <>
+                  {console.log(
+                    timeOptions.filter((t) => t.value == week[i].startTime)
+                  )}
+                </> */}
                 <td>{props.week[i].day}</td>
                 <td>{props.week[i].date}</td>
                 <td>
-                  <Select options={timeOptions} />
+                  {props.week[i].day === 'Sunday' ||
+                  props.week[i].day === 'Saturday' ? (
+                    <Select
+                      options={timeOptions}
+                      defaultValue={timeOptions[0]}
+                      isDisabled
+                    />
+                  ) : (
+                    <Select
+                      options={timeOptions}
+                      defaultValue={timeOptions.filter(
+                        (t) => t.value == week[i].startTime
+                      )}
+                      onChange={(e) => handleOnStartTime(e, i)}
+                    />
+                  )}
                 </td>
                 <td>
-                  <Select options={timeOptions} />
+                  {props.week[i].day === 'Sunday' ||
+                  props.week[i].day === 'Saturday' ? (
+                    <Select
+                      options={timeOptions}
+                      defaultValue={timeOptions[0]}
+                      isDisabled
+                    />
+                  ) : (
+                    <Select
+                      options={timeOptions}
+                      onChange={(e) => handleOnEndTime(e, i)}
+                      defaultValue={timeOptions.filter(
+                        (t) => t.value == week[i].endTime
+                      )}
+                    />
+                  )}
                 </td>
-                <td>{props.week[i].day}</td>
+                <td>
+                  {props.week[i].day === 'Sunday' ||
+                  props.week[i].day === 'Saturday'
+                    ? 'NA'
+                    : endTime[i] > startTime[i]
+                    ? endTime[i] - startTime[i]
+                    : 0}
+                </td>
                 <td>{props.week[i].day}</td>
                 <td>{props.week[i].day}</td>
                 <td>{props.week[i].day}</td>
