@@ -8,7 +8,12 @@ const getAllTimeSheet = () => {
   return axios.get(API_URL + 'getTimeSheet', { headers: authHeader() })
 }
 
+const getUserAllTimeSheet = () => {
+  return axios.get(API_URL + 'getUserTimeSheet', { headers: authHeader() })
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getAllTimeSheet,
+  getUserAllTimeSheet
 }

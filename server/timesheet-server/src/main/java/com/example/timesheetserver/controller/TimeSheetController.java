@@ -1,9 +1,8 @@
 package com.example.timesheetserver.controller;
 
 import com.example.timesheetserver.entity.TimeSheet;
-//import com.example.timesheetserver.security.JwtUtil;
-//import com.example.timesheetserver.security.filter.JwtFilter;
 import com.example.timesheetserver.security.JwtUtil;
+import com.example.timesheetserver.security.filter.JwtFilter;
 import com.example.timesheetserver.service.TimeSheetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +52,7 @@ public class TimeSheetController {
         int userId = JwtUtil.getUserIdFromJwt(jwt);
         log.info("---In TimeSheetController, id="+userId);
         List<TimeSheet> timeSheetList = timeSheetService.getAllTimeSheet(userId);
+        System.out.println(timeSheetList.size()+" size");
         return new ResponseEntity<List<TimeSheet>>(timeSheetList, HttpStatus.OK);
     }
 
