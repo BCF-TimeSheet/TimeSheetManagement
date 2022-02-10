@@ -81,6 +81,7 @@ function TimeSheet() {
   const [friVacation, setFriVacation] = useState(Data[index - 1].vacation);
   const [satVacation, setSatVacation] = useState(Data[index].vacation);
 
+  // Define Total Billing Hours
   const [totalBillingHours, setTotalBillingHours] = useState(
     monTotalHours +
       tueTotalHours +
@@ -91,6 +92,7 @@ function TimeSheet() {
       sunTotalHours
   );
 
+  // Define Total COmpensated Hours
   const [totalCompensatedHours, setTotalCompensatedHours] = useState(
     monTotalHours * !monHoliday +
       tueTotalHours * !tueHoliday +
@@ -103,21 +105,16 @@ function TimeSheet() {
 
   const { Option } = Select;
 
+  // Get Data Index After User Select Date
   function onChange1(date, dateString) {
-    //console.log(dateString);
-    let uid = Data.filter(check);
     const index = Data.findIndex((i) => i.date === dateString);
-    function check(item) {
-      if (item.date === dateString) {
-        return item.id;
-      }
-    }
     setIndex(index);
     initialize(index);
-    console.log("dsgioewgiejighie" + index);
   }
 
+  // After User's Selection, Initialize Data
   function initialize(index) {
+    // Initialize Date
     setSatDate(Data[index].date);
     setFriDate(Data[index - 1].date);
     setThuDate(Data[index - 2].date);
@@ -126,30 +123,34 @@ function TimeSheet() {
     setMonDate(Data[index - 5].date);
     setSunDate(Data[index - 6].date);
 
+    // Initialize Start Time
     setSatStartTime(Data[index].startTime);
     setFriStartTime(Data[index - 1].startTime);
-    setTueStartTime(Data[index - 2].startTime);
+    setThuStartTime(Data[index - 2].startTime);
     setWedStartTime(Data[index - 3].startTime);
     setTueStartTime(Data[index - 4].startTime);
     setMonStartTime(Data[index - 5].startTime);
     setSunStartTime(Data[index - 6].startTime);
 
+    // Initialize End Time
     setSatEndTime(Data[index].endTime);
     setFriEndTime(Data[index - 1].endTime);
-    setTueEndTime(Data[index - 2].endTime);
+    setThuEndTime(Data[index - 2].endTime);
     setWedEndTime(Data[index - 3].endTime);
     setTueEndTime(Data[index - 4].endTime);
     setMonEndTime(Data[index - 5].endTime);
     setSunEndTime(Data[index - 6].endTime);
 
+    // Initialize Total Hours
     setSatTotalHours(0);
     setFriTotalHours(Data[index - 1].endTime - Data[index - 1].startTime);
-    setTueTotalHours(Data[index - 2].endTime - Data[index - 2].startTime);
+    setThuTotalHours(Data[index - 2].endTime - Data[index - 2].startTime);
     setWedTotalHours(Data[index - 3].endTime - Data[index - 3].startTime);
     setTueTotalHours(Data[index - 4].endTime - Data[index - 4].startTime);
     setMonTotalHours(Data[index - 5].endTime - Data[index - 5].startTime);
     setSunTotalHours(0);
 
+    // Initialize Floating Day
     setSatFloating(Data[index].floatingDay);
     setFriFloating(Data[index - 1].floatingDay);
     setThuFloating(Data[index - 2].floatingDay);
@@ -158,6 +159,7 @@ function TimeSheet() {
     setMonFloating(Data[index - 5].floatingDay);
     setSunFloating(Data[index - 6].floatingDay);
 
+    // Initialize Holiday
     setSatHoliday(Data[index].holiday);
     setFriHoliday(Data[index - 1].holiday);
     setThuHoliday(Data[index - 2].holiday);
@@ -166,6 +168,7 @@ function TimeSheet() {
     setMonHoliday(Data[index - 5].holiday);
     setSunHoliday(Data[index - 6].holiday);
 
+    // Initialize Vacation Day
     setSatVacation(Data[index].vacation);
     setFriVacation(Data[index - 1].vacation);
     setThuVacation(Data[index - 2].vacation);
@@ -174,14 +177,8 @@ function TimeSheet() {
     setMonVacation(Data[index - 5].vacation);
     setSunVacation(Data[index - 6].vacation);
 
+    // Initialize Total Billing Hours
     setTotalBillingHours(
-      // monTotalHours +
-      //   tueTotalHours +
-      //   wedTotalHours +
-      //   thuTotalHours +
-      //   friTotalHours +
-      //   satTotalHours +
-      //   sunTotalHours
       parseInt(Data[index - 1].endTime) -
         parseInt(Data[index - 1].startTime) +
         parseInt(Data[index - 2].endTime) -
@@ -194,17 +191,17 @@ function TimeSheet() {
         parseInt(Data[index - 5].startTime)
     );
 
+    // Initialize Total Compenstated Hours
     setTotalCompensatedHours(
-      monTotalHours * !monHoliday +
-        tueTotalHours * !tueHoliday +
-        wedTotalHours * !wedHoliday +
-        thuTotalHours * !thuHoliday +
-        friTotalHours * !friHoliday +
-        satTotalHours * !satHoliday +
-        sunTotalHours * !sunHoliday
+      (Data[index - 5].endTime - Data[index - 5].startTime) * !monHoliday +
+        (Data[index - 4].endTime - Data[index - 4].startTime) * !tueHoliday +
+        (Data[index - 3].endTime - Data[index - 3].startTime) * !wedHoliday +
+        (Data[index - 2].endTime - Data[index - 2].startTime) * !thuHoliday +
+        (Data[index - 1].endTime - Data[index - 1].startTime) * !friHoliday
     );
   }
 
+  // When user select floating day, update the value of total hours and total billing hours
   function onChangeFloating(e) {
     if (e.target.id === "1") {
       setMonFloating(!monFloating);
@@ -219,24 +216,28 @@ function TimeSheet() {
       setTueStartTime(0);
       setTueEndTime(0);
       setTueTotalHours(0);
+      setTotalBillingHours(totalBillingHours - tueTotalHours);
     } else if (e.target.id === "3") {
       setWedFloating(!wedFloating);
       setWedVacation(false);
       setWedStartTime(0);
       setWedEndTime(0);
       setWedTotalHours(0);
+      setTotalBillingHours(totalBillingHours - wedTotalHours);
     } else if (e.target.id === "4") {
       setThuFloating(!thuFloating);
       setThuVacation(false);
       setThuStartTime(0);
       setThuEndTime(0);
       setThuTotalHours(0);
+      setTotalBillingHours(totalBillingHours - thuTotalHours);
     } else if (e.target.id === "5") {
       setFriFloating(!friFloating);
       setFriVacation(false);
       setFriStartTime(0);
       setFriEndTime(0);
       setFriTotalHours(0);
+      setTotalBillingHours(totalBillingHours - friTotalHours);
     } else if (e.target.id === "6") {
       setSatFloating(!satFloating);
       setSatVacation(false);
@@ -291,6 +292,7 @@ function TimeSheet() {
     }
   }
 
+  // When user change start time, update the value of them
   function onChangeMonStartTime(value) {
     setMonTotalHours(monEndTime - value ? monEndTime - value : 0);
     setMonStartTime(value);
@@ -487,11 +489,10 @@ function TimeSheet() {
     );
   }
   //
-  function disabledDate(date1) {
-    //console.log(date1);
-    var dt = new Date(date1);
+  function disabledDate(date) {
+    var dt = new Date(date);
     if (dt.getDay() !== 6) {
-      return date1;
+      return date;
     }
   }
 
@@ -517,23 +518,6 @@ function TimeSheet() {
           <th>Holiday</th>
           <th>Vacation</th>
         </tr>
-        {/* {Data.map((item) => (
-        <tr>
-          <td>{item.id}</td>
-          <td>{item.day}</td>
-          <td>{item.date}</td>
-          <td>
-            <Model name={item.day} onChange={onChange} />
-          </td>
-          <td>
-            <Model name={item.date} />
-          </td>
-          <td>{item.date}</td>
-          <td><CheckBox /></td>
-          <td><CheckBox /></td>
-          <td><CheckBox /></td>
-        </tr>
-      ))} */}
         <tr>
           <td>Sunday</td>
           <td>{sunDate}</td>

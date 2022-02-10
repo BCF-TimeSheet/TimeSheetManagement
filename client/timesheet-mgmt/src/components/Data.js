@@ -126,7 +126,7 @@ const Data = [
     date: "02/10/2022",
     startTime: "9",
     endTime: "14",
-    totleHours: 8,
+    totleHours: 5,
     floatingDay: false,
     holiday: false,
     vacation: false
@@ -137,7 +137,7 @@ const Data = [
     date: "02/11/2022",
     startTime: "8",
     endTime: "18",
-    totleHours: 8,
+    totleHours: 10,
     floatingDay: false,
     holiday: false,
     vacation: false
