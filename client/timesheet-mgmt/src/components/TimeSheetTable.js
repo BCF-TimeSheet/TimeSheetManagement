@@ -2,16 +2,61 @@
 /* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from 'react'
 import Select from 'react-select'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 
 function TimeSheetTable(props) {
-  const [week, setWeek] = useState(props.week)
+  const [week, setWeek] = useState(props.timesheet.days)
   const [timesheet, setTimesheet] = useState(props.timesheet)
+  console.log('props weeks: ', props.timesheet.days)
+  useEffect(() => {})
+
+  var initialStartime = []
+  var initialEndTime = []
+  var initialTotalHours = []
+  var initialFloating = []
+  var initialVacation = []
+  props.timesheet.days.forEach((w) => {
+    initialStartime.push(parseInt(w.startTime))
+    initialEndTime.push(parseInt(w.endTime))
+    initialTotalHours.push(parseInt(w.endTime) - parseInt(w.startTime))
+    initialFloating.push(w.floating)
+    initialVacation.push(w.vacation)
+  })
+
+  console.log('initialStartime', initialStartime)
+  console.log('initialEndTime', initialEndTime)
+
+  console.log('initialTotalHours', initialTotalHours)
+  console.log('initialFloating', initialFloating)
+
+  const [startTime, setStartTime] = useState([...initialStartime])
+  const [endTime, setEndTime] = useState([...initialEndTime])
+  const [totalHour, setTotalHour] = useState([...initialTotalHours])
+  const [totalBillingHour, setTotalBillingHour] = useState(
+    props.timesheet.totalBillingHours
+  )
+  const [totalCompensationHours, setTotalCompensationHours] = useState(
+    props.timesheet.totalCompensationHours
+  )
+
+  const [vacation, setVacation] = useState(initialVacation) //initVacation
+  const [floating, setFloating] = useState(initialFloating) //initFloat
+  const floatLeft = useRef(timesheet.floatingDayLeft)
+  const vacaLeft = useRef(timesheet.vacationDayLeft)
+  const viewMode = props.timesheet.submissionStatus == 'completed'
+  console.log('props timesheet: ', timesheet)
+
   useEffect(() => {
-    const currProps = props.week
-    setWeek(currProps)
-  }, [props.week])
+    console.log('props changed')
+    const currWeeks = props.timesheet.days
+    const currTimeSheet = props.timesheet
+    setStartTime(initialStartime)
+    setEndTime(initialEndTime)
+    setTotalHour(initialTotalHours)
+    setFloating(initialFloating)
+    setVacation(initialVacation)
+    setWeek(currWeeks)
+    setTimesheet(currTimeSheet)
+  }, [props])
 
   useEffect(() => {
     const curTotalHours = []
@@ -39,41 +84,9 @@ function TimeSheetTable(props) {
       ...currTimeSheet,
       days: currWeek,
       totalCompensationHours: currTotalCompensationHours,
-      totalBillingHour: currTotalBillingHours,
+      totalBillingHours: currTotalBillingHours,
     })
   }, [week])
-
-  console.log('props timesheet: ', timesheet)
-
-  const initialStartime = []
-  const initialEndTime = []
-  const initialTotalHours = []
-  const initialFloating = []
-  const initialVacation = []
-  week.forEach((w) => {
-    initialStartime.push(parseInt(w.startTime))
-    initialEndTime.push(parseInt(w.endTime))
-    initialTotalHours.push(parseInt(w.endTime) - parseInt(w.startTime))
-    initialFloating.push(w.floating)
-    initialVacation.push(w.vacation)
-  })
-
-  const [startTime, setStartTime] = useState([...initialStartime])
-  const [endTime, setEndTime] = useState([...initialEndTime])
-  const [totalHour, setTotalHour] = useState([...initialTotalHours])
-  const [totalBillingHour, setTotalBillingHour] = useState(
-    props.timesheet.totalBillingHour
-  )
-  const [totalCompensationHours, setTotalCompensationHours] = useState(
-    props.timesheet.totalCompensationHours
-  )
-  const [selectedDate, setSelectedDate] = useState(
-    Date.parse(props.week[6].date.replace(/-/g, '/'))
-  )
-  const [vacation, setVacation] = useState(initialFloating)
-  const [floating, setFloating] = useState(initialVacation)
-  const floatLeft = useRef(timesheet.floatingDayLeft)
-  const vacaLeft = useRef(timesheet.vacationDayLeft)
 
   const handleOnStartTime = (e, i) => {
     console.log(e.value, 'index', i)
@@ -282,15 +295,6 @@ function TimeSheetTable(props) {
     { label: 'Approved Timesheet', value: 'complete' },
   ]
 
-  const disableDate = (date1) => {
-    //console.log(date1);
-    var dt = new Date(date1)
-    if (dt.getDay() !== 6) {
-      return date1
-    }
-  }
-
-  console.log('props.week:', props.week)
   return (
     <div>
       <div className="row">
@@ -321,9 +325,9 @@ function TimeSheetTable(props) {
         <tbody>
           {week.map((element, i) => {
             return (
-              <tr key={i}>
-                <td>{props.week[i].day}</td>
-                <td>{props.week[i].date}</td>
+              <tr key={i} className={viewMode ? 'row-disabled' : ''}>
+                <td>{week[i].day}</td>
+                <td>{week[i].date}</td>
                 <td>
                   {isWeekend(week[i]) ? (
                     <Select

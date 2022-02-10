@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.row-disabled {
+  background-color: rgba(236, 240, 241, 0.5);
+  pointer-events: none;
+  width: 100%;
+}
