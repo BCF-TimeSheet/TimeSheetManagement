@@ -40,6 +40,25 @@ function Summary() {
     getTimeSheet()
   }, [])
 
+  useEffect(() => {
+    console.log('render')
+
+    timesheet.forEach((ts, i) => {
+      float.current[i] = 0
+      vaca.current[i] = 0
+      ts.days.forEach((day) => {
+        if (day.floating == true) {
+          float.current[i] = float.current[i] + 1
+        }
+        if (day.vacation == true) {
+          vaca.current[i] = vaca.current[i] + 1
+        }
+      })
+    })
+    const currWeek = [...week]
+    setWeek(currWeek)
+  }, [timesheet])
+
   return (
     <div>
       {timesheet.length > 0 && (
@@ -72,30 +91,30 @@ function Summary() {
                   </td>
                   <td>
                     {float.current[i] > 0 && (
-                      <p>
+                      <div>
                         {float.current[i]} floating days required
                         <ReactTooltip
                           place="top"
                           effect="solid"
                           id="infoCircle"
                         >
-                          {e.floatingDayLeft} floating days left
+                          <span> {e.floatingDayLeft} floating days left</span>
                         </ReactTooltip>
                         <AiFillInfoCircle data-tip data-for="infoCircle" />
-                      </p>
+                      </div>
                     )}
                     {vaca.current[i] > 0 && (
-                      <p>
-                        {vaca.current[i]} vacation required{' '}
+                      <div>
+                        {vaca.current[i]} vacation required
                         <ReactTooltip
                           place="top"
                           effect="solid"
                           id="infoCircleV"
                         >
-                          {e.vacationDayLeft} vacation left
+                          <span>{e.vacationDayLeft} vacation left</span>
                         </ReactTooltip>
                         <AiFillInfoCircle data-tip data-for="infoCircleV" />
-                      </p>
+                      </div>
                     )}
                   </td>
                 </tr>
