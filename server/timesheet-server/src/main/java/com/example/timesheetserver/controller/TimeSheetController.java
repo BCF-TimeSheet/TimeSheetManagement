@@ -1,5 +1,7 @@
 package com.example.timesheetserver.controller;
 
+import com.example.timesheetserver.entity.Days;
+import com.example.timesheetserver.entity.Template;
 import com.example.timesheetserver.entity.TimeSheet;
 import com.example.timesheetserver.security.JwtUtil;
 import com.example.timesheetserver.security.filter.JwtFilter;
@@ -44,5 +46,19 @@ public class TimeSheetController {
         log.info("---In TimeSheetController/timesheet/getTimeSheet" );
         List<TimeSheet> timeSheetList = timeSheetService.getAllTimeSheet();
         return new ResponseEntity<List<TimeSheet>>(timeSheetList, HttpStatus.OK);
+    }
+
+    @PostMapping("/timesheet/updateTimeSheet")
+    public String updateTimeSheet(@RequestBody TimeSheet timeSheet){
+        log.info("---In TimeSheetController/updateTimeSheet, timesheet" + timeSheet.toString());
+        timeSheetService.saveTimeSheet(timeSheet);
+        return "Updated timesheet";
+    }
+
+    @PostMapping("/timesheet/saveTemplate")
+    public String saveTemplate(@RequestBody Template days){
+        log.info("---In TimeSheetController/updateTimeSheet, timesheet" + days.toString());
+        timeSheetService.saveTemplate(days);
+        return "Updated template";
     }
 }

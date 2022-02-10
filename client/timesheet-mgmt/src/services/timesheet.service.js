@@ -8,7 +8,16 @@ const getAllTimeSheet = () => {
   return axios.get(API_URL + 'getTimeSheet', { headers: authHeader() })
 }
 
+//Save timesheet
+const saveTimeSheet = (timesheet) => {
+  console.log(timesheet)
+  return axios.post(API_URL + 'updateTimeSheet', timesheet, {
+    headers: authHeader(),
+  })
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getAllTimeSheet,
+  saveTimeSheet,
 }

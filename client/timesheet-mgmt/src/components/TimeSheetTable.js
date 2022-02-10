@@ -2,6 +2,7 @@
 /* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from 'react'
 import Select from 'react-select'
+import TimesheetService from '../services/timesheet.service'
 
 function TimeSheetTable(props) {
   const [week, setWeek] = useState(props.timesheet.days)
@@ -276,6 +277,20 @@ function TimeSheetTable(props) {
     return week.day == 'Sunday' || week.day == 'Saturday'
   }
 
+  const handleOnSaveTimeSheet = (bodyTs) => {
+    console.log('saved trigger')
+
+    TimesheetService.saveTimeSheet(bodyTs).then(
+      (res) => {
+        console.log('saved', res)
+        window.location.reload()
+      },
+      (err) => {
+        console.log('err when save', err)
+      }
+    )
+  }
+
   const timeOptions = [
     { label: 'NA', value: 'NaN' },
     { label: '9:00AM', value: 9 },
@@ -292,7 +307,7 @@ function TimeSheetTable(props) {
 
   const statusOptions = [
     { label: 'Unapproved Timesheet', value: 'incomplete' },
-    { label: 'Approved Timesheet', value: 'complete' },
+    { label: 'Approved Timesheet', value: 'completed' },
   ]
 
   return (
@@ -433,7 +448,12 @@ function TimeSheetTable(props) {
             />
           </div>
           <div className="col-sm">
-            <button className="btn btn-primary">Save</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleOnSaveTimeSheet(timesheet)}
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>

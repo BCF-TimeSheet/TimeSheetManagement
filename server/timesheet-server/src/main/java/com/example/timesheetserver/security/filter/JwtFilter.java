@@ -26,6 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "*");
         log.info("In filter");
+
         String authorizationHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
