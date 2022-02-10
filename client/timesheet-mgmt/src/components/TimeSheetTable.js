@@ -297,15 +297,7 @@ function TimeSheetTable(props) {
         <div className="col-sm">
           <button className="btn btn-info col-sm">Set Default</button>
         </div>
-        <div className="col-sm">
-          <p>Week Ending</p>
-          <DatePicker
-            dateFormat="yyyy-MM-dd"
-            selected={selectedDate}
-            disabledDate={disableDate(selectedDate)}
-            onChange={(date) => setSelectedDate(date)}
-          />
-        </div>
+
         <div className="col-sm">
           <p>Total Billing Hours: {totalBillingHour}</p>
         </div>
@@ -425,9 +417,9 @@ function TimeSheetTable(props) {
             <form action="">
               <div className="col-sm">
                 <input type="file" />
-                <input type="submit" />
               </div>
             </form>
+            <button>Submit</button>
           </div>
 
           <div className="col-sm">
