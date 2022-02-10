@@ -16,8 +16,17 @@ const saveTimeSheet = (timesheet) => {
   })
 }
 
+//Save timesheet
+const saveTemplate = (days) => {
+  console.log(days)
+  return axios.post(API_URL + 'saveTemplate', days, {
+    headers: authHeader(),
+  })
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getAllTimeSheet,
   saveTimeSheet,
+  saveTemplate,
 }

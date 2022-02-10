@@ -17,3 +17,7 @@ code {
   pointer-events: none;
   width: 100%;
 }
+
+.not-display {
+  display: none;
+}

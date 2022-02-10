@@ -57,7 +57,7 @@ public class TimeSheetController {
 
     @PostMapping("/timesheet/saveTemplate")
     public String saveTemplate(@RequestBody Template days){
-        log.info("---In TimeSheetController/updateTimeSheet, timesheet" + days.toString());
+        log.info("---In TimeSheetController/saveTemplate, saveTemplate" + days.toString());
         timeSheetService.saveTemplate(days);
         return "Updated template";
     }

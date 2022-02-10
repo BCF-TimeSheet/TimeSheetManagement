@@ -5,6 +5,8 @@ import Select from 'react-select'
 import TimesheetService from '../services/timesheet.service'
 
 function TimeSheetTable(props) {
+  const TEMPLATE_ID = '620591b8c1180d77866f3170'
+
   const [week, setWeek] = useState(props.timesheet.days)
   const [timesheet, setTimesheet] = useState(props.timesheet)
   console.log('props weeks: ', props.timesheet.days)
@@ -283,10 +285,27 @@ function TimeSheetTable(props) {
     TimesheetService.saveTimeSheet(bodyTs).then(
       (res) => {
         console.log('saved', res)
-        window.location.reload()
+        alert('Saved!')
+        // window.location.reload()
       },
       (err) => {
         console.log('err when save', err)
+      }
+    )
+  }
+
+  const handleOnSetDefault = (bodyTs) => {
+    const template = { id: TEMPLATE_ID, days: bodyTs.days }
+    console.log('bodyTs', template)
+
+    TimesheetService.saveTemplate(template).then(
+      (res) => {
+        console.log('saved template', res)
+        alert('Default template saved!')
+        // window.location.reload()
+      },
+      (err) => {
+        console.log('err when save template: ', err)
       }
     )
   }
@@ -314,7 +333,12 @@ function TimeSheetTable(props) {
     <div>
       <div className="row">
         <div className="col-sm">
-          <button className="btn btn-info col-sm">Set Default</button>
+          <button
+            className="btn btn-info col-sm"
+            onClick={() => handleOnSetDefault(timesheet)}
+          >
+            Set Default
+          </button>
         </div>
 
         <div className="col-sm">
@@ -430,7 +454,7 @@ function TimeSheetTable(props) {
         </tbody>
       </table>
 
-      <div className="container">
+      <div className={viewMode ? 'not-display' : 'container'}>
         <div className="row">
           <div className="col-sm">
             <form action="">
@@ -438,7 +462,15 @@ function TimeSheetTable(props) {
                 <input type="file" />
               </div>
             </form>
-            <button>Submit</button>
+            <button
+              onClick={() => {
+                setTimeout(() => {
+                  alert('File submitted!')
+                }, 500)
+              }}
+            >
+              Submit
+            </button>
           </div>
 
           <div className="col-sm">
@@ -456,6 +488,9 @@ function TimeSheetTable(props) {
             </button>
           </div>
         </div>
+      </div>
+      <div>
+        <p style={{ marginTop: 100 }}></p>
       </div>
     </div>
   )

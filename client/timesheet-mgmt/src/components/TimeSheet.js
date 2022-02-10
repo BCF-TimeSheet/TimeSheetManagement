@@ -53,6 +53,10 @@ function TimeSheet(props) {
     getTimeSheet()
   }, [])
 
+  useEffect(() => {
+    getTimeSheet()
+  }, [selectedDate])
+
   const handleOnDayChange = (date) => {
     timesheet.forEach((t, i) => {
       if (Date.parse(t.weekEnd.replace(/-/g, '/')) === date.getTime()) {
