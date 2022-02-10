@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 // import AuthService from '../services/auth.service'
 import ReactTooltip from 'react-tooltip'
 import { AiFillInfoCircle } from 'react-icons/ai'
@@ -6,6 +6,9 @@ import TimesheetService from '../services/timesheet.service'
 function Summary() {
   const [timesheet, setTimeSheet] = useState([])
   const [week, setWeek] = useState([])
+
+  const float = useRef([])
+  const vaca = useRef([])
 
   const getTimeSheet = async () => {
     const response = await TimesheetService.getAllTimeSheet().catch((err) =>
@@ -17,6 +20,20 @@ function Summary() {
       console.log(timesheetRes[0].days)
       setWeek(timesheetRes[0].days)
       setTimeSheet(response.data)
+      response.data.forEach((ts, i) => {
+        float.current[i] = 0
+        vaca.current[i] = 0
+        ts.days.forEach((day) => {
+          if (day.floating == true) {
+            float.current[i] = float.current[i] + 1
+          }
+          if (day.vacation == true) {
+            vaca.current[i] = vaca.current[i] + 1
+          }
+        })
+      })
+      console.log('float', float.current)
+      console.log('vaca', vaca.current)
     }
   }
   useEffect(() => {
@@ -54,28 +71,28 @@ function Summary() {
                     )}
                   </td>
                   <td>
-                    {e.floatingDayLeft > 0 && (
+                    {float.current[i] > 0 && (
                       <p>
-                        {e.floatingDayLeft} floating days required
+                        {float.current[i]} floating days required
                         <ReactTooltip
                           place="top"
                           effect="solid"
                           id="infoCircle"
                         >
-                          {3 - e.floatingDayLeft} floating days left
+                          {e.floatingDayLeft} floating days left
                         </ReactTooltip>
                         <AiFillInfoCircle data-tip data-for="infoCircle" />
                       </p>
                     )}
-                    {e.vacationDayLeft > 0 && (
+                    {vaca.current[i] > 0 && (
                       <p>
-                        {e.vacationDayLeft} vacation required{' '}
+                        {vaca.current[i]} vacation required{' '}
                         <ReactTooltip
                           place="top"
                           effect="solid"
                           id="infoCircleV"
                         >
-                          {3 - e.vacationDayLeft} vacation left
+                          {e.vacationDayLeft} vacation left
                         </ReactTooltip>
                         <AiFillInfoCircle data-tip data-for="infoCircleV" />
                       </p>
