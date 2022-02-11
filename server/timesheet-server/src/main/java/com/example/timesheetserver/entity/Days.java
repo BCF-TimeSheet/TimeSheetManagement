@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Getter
 @ToString
+@Builder
 @Document(collection="days")
 public class Days {
     @Id

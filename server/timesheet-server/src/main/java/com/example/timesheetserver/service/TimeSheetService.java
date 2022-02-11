@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,5 +43,45 @@ public class TimeSheetService {
 
     public List<TimeSheet> getAllTimeSheet(){
         return timeSheetRepository.findAll();
+    }
+
+    public void generateTimeSheet(){
+        //Get current date
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(date);
+        LocalDate lcDate = LocalDate.parse(strDate);
+
+        System.out.println("Here!");
+
+        Template template = templateRepository.findAll().get(0);
+        List<Days> days = new ArrayList<>();
+
+        for (int i=0; i < 7; i++){
+            LocalDate currDate = lcDate.plusDays(i);
+            Days day = Days.builder()
+                    .day(currDate.getDayOfWeek().toString())
+                    .date(currDate.toString())
+                    .startTime(template.getDays().get(i).getStartTime())
+                    .endTime(template.getDays().get(i).getEndTime())
+                    .isHoliday(template.getDays().get(i).isHoliday())
+                    .isFloating(template.getDays().get(i).isFloating())
+                    .isVacation(template.getDays().get(i).isVacation())
+                    .build();
+            days.add(day);
+        }
+        TimeSheet newTimeSheet = TimeSheet.builder()
+                .userId(1)
+                .weekEnd(days.get(6).getDate())
+                .days(days)
+                .totalBillingHours(0)
+                .submissionStatus("incomplete")
+                .approvalStatus("unapproved")
+                .totalCompensationHours(0)
+                .floatingDayLeft(1)
+                .vacationDayLeft(1).build();
+
+        System.out.println("New timesheet:" + newTimeSheet.toString());
+        timeSheetRepository.save(newTimeSheet);
     }
 }

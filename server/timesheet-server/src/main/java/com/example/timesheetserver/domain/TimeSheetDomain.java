@@ -18,6 +18,7 @@ public class TimeSheetDomain implements Serializable {
     private List<DaysDomain> days;
     private Integer totalBillingHours;
     private String approvalStatus;
+    private String submissionStatus;
     private Integer totalCompensationHours;
     private Integer floatingDayLeft;
     private Integer vacationDayLeft;
