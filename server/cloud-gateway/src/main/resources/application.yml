@@ -1,0 +1,39 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    preferIpAddress: true
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+
+      routes:
+        - id: auth-server
+          uri: lb://auth-server
+          predicates:
+            - Path=/auth/**
+        - id: timesheet-server
+          uri: lb://timesheet-server
+          predicates:
+            - Path=/timesheet/**
+        - id: employee-server
+          uri: lb://employee-server
+          predicates:
+            - Path=/employee/**
+        - id: composite-server
+          uri: lb://composite-server
+          predicates:
+            - Path=/composite/**

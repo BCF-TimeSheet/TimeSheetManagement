@@ -1,6 +1,6 @@
 spring:
   application:
-    name: employee-server
+    name: composite-server
 
 eureka:
   client:

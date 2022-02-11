@@ -25,27 +25,35 @@ public class TimeSheetController {
     @Autowired
     private TimeSheetService timeSheetService;
 
-    @GetMapping("/")
-    public String test(HttpServletRequest request){
-//        String jwt = JwtUtil.resolveToken(request);
-//        log.info("---In TimeSheetController, jwt="+jwt);
-//        int userId = JwtUtil.getUserIdFromJwt(jwt);
-//        log.info("---In TimeSheetController, id="+userId);
-        return "timesheet";
-    }
+//    @GetMapping("/")
+//    public String test(HttpServletRequest request){
+////        String jwt = JwtUtil.resolveToken(request);
+////        log.info("---In TimeSheetController, jwt="+jwt);
+////        int userId = JwtUtil.getUserIdFromJwt(jwt);
+////        log.info("---In TimeSheetController, id="+userId);
+//        return "timesheet";
+//    }
 
-    @PostMapping("/createTimeSheet")
+    @PostMapping("/timesheet/createTimeSheet")
     public String createTimeSheet(@RequestBody TimeSheet timeSheet){
         log.info("---In TimeSheetController/createTimeSheet, timesheet" + timeSheet.toString());
         timeSheetService.saveTimeSheet(timeSheet);
         return "Saved timesheet";
     }
 
+//    @GetMapping("/timesheet/getTimeSheet")
+//    public ResponseEntity<?> getTimeSheet(){
+//        log.info("---In TimeSheetController/timesheet/getTimeSheet" );
+//        List<TimeSheet> timeSheetList = timeSheetService.getAllTimeSheet();
+//        return new ResponseEntity<List<TimeSheet>>(timeSheetList, HttpStatus.OK);
+//    }
+
+
     @GetMapping("/timesheet/getTimeSheet")
-    public ResponseEntity<?> getTimeSheet(){
+    public List<TimeSheet> getTimeSheet(){
         log.info("---In TimeSheetController/timesheet/getTimeSheet" );
         List<TimeSheet> timeSheetList = timeSheetService.getAllTimeSheet();
-        return new ResponseEntity<List<TimeSheet>>(timeSheetList, HttpStatus.OK);
+        return timeSheetList;
     }
 
     @PostMapping("/timesheet/updateTimeSheet")

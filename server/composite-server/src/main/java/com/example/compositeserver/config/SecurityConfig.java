@@ -1,7 +1,6 @@
-package com.example.timesheetserver.config;
+package com.example.compositeserver.config;
 
-
-import com.example.timesheetserver.security.filter.JwtFilter;
+import com.example.compositeserver.security.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

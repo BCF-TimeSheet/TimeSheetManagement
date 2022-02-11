@@ -49,9 +49,10 @@ const Login = (props) => {
           window.location.reload()
         },
         (error) => {
-          console.log(error.response.data.jwt)
-          const resMessage = error.response.data.jwt.toString()
-
+          // console.log(error.response.data.jwt)
+          console.log(error)
+          // const resMessage = error.response.data.jwt.toString()
+          const resMessage = error
           setLoading(false)
           setMessage(resMessage)
         }

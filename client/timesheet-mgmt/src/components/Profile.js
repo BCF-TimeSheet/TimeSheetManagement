@@ -4,7 +4,7 @@ import authHeader from '../services/auth-header'
 
 const Profile = () => {
   const [profile, setProfile] = useState(null)
-  const API_URL = 'http://localhost:8080/1'
+  const API_URL = 'http://localhost:9090/employee/1'
 
   useEffect(() => {
     axios.get(API_URL, { headers: authHeader() }).then((res) => {
