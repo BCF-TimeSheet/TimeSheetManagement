@@ -49,12 +49,21 @@ const Login = (props) => {
           window.location.reload()
         },
         (error) => {
+          console.log('login err:', error)
+
           console.log(error.response.data.jwt)
           // console.log(error)
-          const resMessage = error.response.data.jwt.toString()
+
+          if (error.response.data.jwt) {
+            const resMessage = error.response.data.jwt.toString()
+            setLoading(false)
+            setMessage(resMessage)
+          } else {
+            setLoading(false)
+            setMessage('Wrong user name or password')
+          }
           // const resMessage = error
-          setLoading(false)
-          setMessage(resMessage)
+          // setLoading(false)
         }
       )
     } else {

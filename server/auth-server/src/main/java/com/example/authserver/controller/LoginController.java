@@ -52,9 +52,10 @@ public class LoginController {
                 authenticationRequest.getPassword()
         ));
         }catch (BadCredentialsException e){
-
+            log.info("---In Catch block-LoginController-auth\"");
             return ResponseEntity.badRequest().body(new AuthenticationResponse("Wrong username or password!"));
         }
+        log.info("---After Catch block-LoginController-auth\"");
         UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
         String jwt = JwtUtil.generateToken(authenticationRequest.getUsername(), JwtConstant.JWT_VALID_DURATION, userService.getUserIdByUsername(authenticationRequest.getUsername()));
         return ResponseEntity.ok(new AuthenticationResponse(jwt));

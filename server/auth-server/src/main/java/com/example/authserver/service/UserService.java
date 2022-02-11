@@ -22,12 +22,17 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("In UserService--loadUserByUsername");
+        try{
         User user = userRepository.findByUsername(username);
-        log.info("user: " + user.toString() );
+        log.info("user: "  );
         if (user == null){
-            throw new UsernameNotFoundException("User not found!");
+            return null;
         }
         return new TimeSheetUserDetails(user);
+        } catch(Exception e){
+            return null;
+        }
+
     }
 
     public List<User> getAllUsers(){
