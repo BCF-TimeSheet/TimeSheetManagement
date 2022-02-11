@@ -44,15 +44,15 @@ const Login = (props) => {
 
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.login(username, password).then(
-        () => {
+        (r) => {
           props.history.push('/')
           window.location.reload()
         },
         (error) => {
-          // console.log(error.response.data.jwt)
-          console.log(error)
-          // const resMessage = error.response.data.jwt.toString()
-          const resMessage = error
+          console.log(error.response.data.jwt)
+          // console.log(error)
+          const resMessage = error.response.data.jwt.toString()
+          // const resMessage = error
           setLoading(false)
           setMessage(resMessage)
         }

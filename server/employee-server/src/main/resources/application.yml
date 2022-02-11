@@ -1,12 +1,16 @@
-spring:
-  application:
-    name: employee-server
+server:
+  port: ${PORT:0}
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-  instance:
-    hostname: localhost
+#spring:
+#  application:
+#    name: employee-server
+
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#  instance:
+#    hostname: localhost
+#    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}

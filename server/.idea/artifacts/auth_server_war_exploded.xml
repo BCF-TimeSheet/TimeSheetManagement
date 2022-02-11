@@ -124,6 +124,9 @@
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-core:5.6.1" />
           <element id="library" level="project" name="Maven: org.springframework.security:spring-security-crypto:5.6.1" />
           <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.3.0" />
+          <element id="library" level="project" name="Maven: org.springframework.cloud:spring-cloud-starter-config:3.1.0" />
+          <element id="library" level="project" name="Maven: org.springframework.cloud:spring-cloud-config-client:3.1.0" />
+          <element id="library" level="project" name="Maven: org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
